@@ -1,17 +1,20 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./Dropdown.module.scss";
 
 interface DropdownProps {
-  items: { label: string; onClick: () => void }[];
-  onClose: () => void;
+  items: { label: string; onClick: () => void }[]; // Kiekvienas punktas turi label ir onClick funkciją
+  onClose: () => void; // Uždaryti dropdown
 }
 
 const Dropdown: React.FC<DropdownProps> = ({ items, onClose }) => {
+  const navigate = useNavigate(); // Naudojame navigaciją
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const dropdownElement = document.querySelector(`.${styles.dropdown}`);
       if (dropdownElement && !dropdownElement.contains(event.target as Node)) {
-        onClose();
+        onClose(); // Uždaryti dropdown paspaudus šalia
       }
     };
 
@@ -28,8 +31,8 @@ const Dropdown: React.FC<DropdownProps> = ({ items, onClose }) => {
           key={index}
           className={styles.dropdownItem}
           onClick={() => {
-            item.onClick();
-            onClose();
+            item.onClick(); // Vykdome onClick iš funkcijos
+            onClose(); // Uždarome dropdown
           }}
         >
           {item.label}
