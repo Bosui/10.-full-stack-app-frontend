@@ -1,0 +1,33 @@
+// src/components/BusinessDetails.module.scss
+.detailsContainer {
+  max-width: 800px;
+  margin: 32px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.details {
+  padding: 16px;
+
+  h1 {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  p {
+    font-size: 16px;
+    margin-bottom: 8px;
+
+    strong {
+      font-weight: bold;
+    }
+  }
+}
