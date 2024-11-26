@@ -1,13 +1,25 @@
-// src/components/BusinessList.tsx
 import axios from "axios";
 import classNames from "classnames";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./BusinessList.module.scss";
-import { useBusinesses } from "./hooks"; // Hook'as duomenų gavimui iš backend
+import { useBusinesses } from "./hooks";
 
-const BusinessList: React.FC = () => {
-  const { data: businesses, isLoading, error } = useBusinesses(); // Gauti duomenis iš backend
+interface Business {
+  _id: string;
+  name: string;
+  category: string;
+  imageUrls: string[];
+  location?: string; // Savybė turi būti string arba undefined
+}
+
+interface BusinessListProps {
+  categoryName?: string;
+  className?: string;
+}
+
+const BusinessList: React.FC<BusinessListProps> = ({ categoryName, className }) => {
+  const { data: businesses, isLoading, error } = useBusinesses();
   const navigate = useNavigate();
 
   if (isLoading) {
@@ -20,7 +32,6 @@ const BusinessList: React.FC = () => {
 
   const handleCardClick = async (id: string) => {
     try {
-      // Aplinka: Vite aplinkos kintamieji
       const baseUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
       if (!baseUrl) {
@@ -28,29 +39,29 @@ const BusinessList: React.FC = () => {
       }
 
       const url = `${baseUrl}/businesses/${id}`;
-      console.log("Siunčiama užklausa:", JSON.stringify({ url }, null, 2));
-
       const response = await axios.get(url);
-      console.log("Atsakymas iš backend:", response.data);
 
-      // Navigacija su gautais duomenimis
       navigate(`/business-details/${id}`, { state: { business: response.data } });
-    } catch (error) {
-      console.error("Klaida siunčiant užklausą į backend:", error);
-      alert("Nepavyko užkrauti verslo detalių. Patikrinkite tinklo jungtį ar serverio statusą.");
+    } catch (err) {
+      console.error("Error fetching business details:", err);
+      alert("Failed to fetch business details.");
     }
   };
 
+  const filteredBusinesses = categoryName
+    ? businesses?.filter((business) => business.category === categoryName)
+    : businesses;
+
   return (
-    <div className={styles.container}>
-      {businesses?.map((business) => (
+    <div className={classNames(styles.container, className)}>
+      {filteredBusinesses?.map((business) => (
         <div
           key={business._id}
           className={classNames(styles.card)}
           onClick={() => handleCardClick(business._id)}
         >
           <img
-            src={business.imageUrls[0]}
+            src={business.imageUrls[0] || ""}
             alt={business.name}
             className={styles.image}
           />

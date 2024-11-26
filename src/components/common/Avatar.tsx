@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { PropsWithChildren, useState } from "react";
 import styles from "./Avatar.module.scss";
 import Dropdown from "./Dropdown";
 
@@ -7,7 +7,7 @@ interface DropdownItem {
   onClick: () => void;
 }
 
-const Avatar: React.FC = () => {
+const Avatar: React.FC<PropsWithChildren> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -17,7 +17,7 @@ const Avatar: React.FC = () => {
   return (
     <div className={styles.avatarContainer}>
       <div className={styles.avatar} onClick={toggleDropdown}>
-        A {/* Placeholder for avatar initial */}
+        {children || "A"} {/* Placeholder for avatar initial */}
       </div>
       {isOpen && (
         <Dropdown
@@ -26,7 +26,7 @@ const Avatar: React.FC = () => {
             { label: "My Booking", onClick: () => console.log("My Booking") },
             { label: "Logout", onClick: () => console.log("Logout") },
           ]}
-          onClose={() => setIsOpen(false)}
+          onClose={() => setIsOpen(false)} // Uždaro dropdown meniu
         />
       )}
     </div>
