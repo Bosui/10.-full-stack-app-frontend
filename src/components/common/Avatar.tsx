@@ -1,12 +1,17 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import styles from "./Avatar.module.scss";
 import Dropdown from "./Dropdown";
 
-const Avatar = () => {
+interface DropdownItem {
+  label: string;
+  onClick: () => void;
+}
+
+const Avatar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prevState) => !prevState);
   };
 
   return (

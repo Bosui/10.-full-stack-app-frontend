@@ -19,27 +19,27 @@ const BusinessList: React.FC = () => {
   }
 
   const handleCardClick = async (id: string) => {
-  try {
-    // Naudojame Vite aplinkos kintamuosius
-    const url = `${import.meta.env.VITE_APP_API_BASE_URL}/businesses/${id}`;
+    try {
+      // Aplinka: Vite aplinkos kintamieji
+      const baseUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
+      if (!baseUrl) {
+        throw new Error("API base URL is not defined in environment variables.");
+      }
 
-    console.log(JSON.stringify({ url }, null, 2));
+      const url = `${baseUrl}/businesses/${id}`;
+      console.log("Siunčiama užklausa:", JSON.stringify({ url }, null, 2));
 
-    const response = await axios.get(url);
+      const response = await axios.get(url);
+      console.log("Atsakymas iš backend:", response.data);
 
-    console.log("Atsakymas iš backend:", response.data);
-
-    navigate(`/business-details/${id}`, { state: { business: response.data } });
-  } catch (error) {
-    console.error("Klaida siunčiant užklausą į backend:", error);
-    alert("Nepavyko užkrauti verslo detalių.");
-  }
-};
-
-
-
-
+      // Navigacija su gautais duomenimis
+      navigate(`/business-details/${id}`, { state: { business: response.data } });
+    } catch (error) {
+      console.error("Klaida siunčiant užklausą į backend:", error);
+      alert("Nepavyko užkrauti verslo detalių. Patikrinkite tinklo jungtį ar serverio statusą.");
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -57,7 +57,7 @@ const BusinessList: React.FC = () => {
           <div className={styles.content}>
             <span className={styles.category}>{business.category}</span>
             <h3 className={styles.name}>{business.name}</h3>
-            <p className={styles.address}>{business.location}</p>
+            <p className={styles.address}>{business.location || "No location provided"}</p>
             <button className={styles.bookButton}>View details</button>
           </div>
         </div>
