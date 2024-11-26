@@ -6,7 +6,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "@/styles/variables.scss";`, // Automatinis kintamųjų importas
+        additionalData: `@import "src/styles/variables.scss";`, // Automatinis kintamųjų importas
       },
     },
   },
@@ -14,5 +14,9 @@ export default defineConfig({
     alias: {
       "@": "/src", // Alias `@` nukreipia į `src` katalogą
     },
+  },
+  build: {
+    outDir: "dist", // Išvesties katalogas
+    emptyOutDir: true, // Išvalo katalogą prieš build'ą
   },
 });
