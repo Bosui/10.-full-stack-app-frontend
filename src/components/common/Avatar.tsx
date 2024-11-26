@@ -1,23 +1,25 @@
-import React, { PropsWithChildren, useState } from "react";
+<<<<<<< HEAD
+import { PropsWithChildren } from "react";
+import styles from "./Avatar.module.scss";
+
+const Avatar = ({ children }: PropsWithChildren) => {
+  return <div className={styles.avatar}>{children}</div>;
+=======
+import { useState } from "react";
 import styles from "./Avatar.module.scss";
 import Dropdown from "./Dropdown";
 
-interface DropdownItem {
-  label: string;
-  onClick: () => void;
-}
-
-const Avatar: React.FC<PropsWithChildren> = ({ children }) => {
+const Avatar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
-    setIsOpen((prevState) => !prevState);
+    setIsOpen(!isOpen);
   };
 
   return (
     <div className={styles.avatarContainer}>
       <div className={styles.avatar} onClick={toggleDropdown}>
-        {children || "A"} {/* Placeholder for avatar initial */}
+        A {/* Placeholder for avatar initial */}
       </div>
       {isOpen && (
         <Dropdown
@@ -26,11 +28,12 @@ const Avatar: React.FC<PropsWithChildren> = ({ children }) => {
             { label: "My Booking", onClick: () => console.log("My Booking") },
             { label: "Logout", onClick: () => console.log("Logout") },
           ]}
-          onClose={() => setIsOpen(false)} // Uždaro dropdown meniu
+          onClose={() => setIsOpen(false)}
         />
       )}
     </div>
   );
+>>>>>>> 79bf93f (Initial commit)
 };
 
 export default Avatar;

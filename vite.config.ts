@@ -15,8 +15,4 @@ export default defineConfig({
       "@": "/src", // Alias `@` nukreipia į `src` katalogą
     },
   },
-   build: {
-    outDir: "dist", // Nurodykite išvesties katalogą
-    emptyOutDir: true, // Išvalo katalogą prieš statybą
-  },
 });
