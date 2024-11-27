@@ -20,20 +20,20 @@ const LoginForm = () => {
   const { mutateAsync: loginUser } = useLoginUser();
   const navigate = useNavigate();
 
+  
   const handleSubmit = async (formValues: LoginRequest) => {
-    try {
-      const response = await loginUser(formValues);
-      console.log("Login response:", response); // Debug užklausos atsakymui
-      login(response);
-      navigate(ROUTES.HOME);
-    } catch (err) {
-      const errorMessage = err as ErrorResponse;
-      console.error("Login error:", errorMessage);
-      setError(
-        errorMessage.response?.data?.message || "Unexpected error occurred"
-      );
-    }
-  };
+  console.log("Submitting form values:", formValues); // Log formos reikšmes
+  try {
+    const response = await loginUser(formValues);
+    console.log("Login response:", response); // Log atsakymą iš backend
+    login(response); // Prisijungimo duomenų išsaugojimas
+    navigate(ROUTES.HOME);
+  } catch (err) {
+    console.error("Error:", err); // Debug klaidą
+    const errorMessage = (err as ErrorResponse).response?.data?.message || "Unexpected error";
+    setError(errorMessage);
+  }
+};
 
   return (
     <div className={styles.container}>
