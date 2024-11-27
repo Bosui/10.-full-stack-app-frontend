@@ -1,33 +1,27 @@
-import {
-  UseMutationResult,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { loginUser, registerUser } from "./api";
-import { RegisterRequest } from "./types";
 import { ErrorResponse } from "@/types/error";
-
-export const USERS_KEY = "USERS";
+import { useMutation } from "@tanstack/react-query";
+import { loginUser, registerUser } from "./api";
 
 export const useLoginUser = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: loginUser,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: [USERS_KEY] }),
+    onSuccess: (data) => {
+      console.log("Login successful:", data);
+    },
+    onError: (error: ErrorResponse) => {
+      console.error("Login error:", error.response?.data?.message || error.message);
+    },
   });
 };
 
-export const useRegisterUser = (): UseMutationResult<
-  void,
-  ErrorResponse,
-  RegisterRequest,
-  unknown
-> => {
-  const queryClient = useQueryClient();
-
+export const useRegisterUser = () => {
   return useMutation({
     mutationFn: registerUser,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: [USERS_KEY] }),
+    onSuccess: (data) => {
+      console.log("Registration successful:", data);
+    },
+    onError: (error: ErrorResponse) => {
+      console.error("Registration error:", error.response?.data?.message || error.message);
+    },
   });
 };
