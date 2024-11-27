@@ -1,5 +1,6 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../context/UserContext"; // Importuojame kontekstą
 import styles from "./MyBooking.module.scss";
 
 interface Booking {
@@ -15,16 +16,22 @@ interface MyBookingProps {
 }
 
 const MyBooking: React.FC<MyBookingProps> = ({ onClose }) => {
+  const { user } = useContext(UserContext); // Gauname vartotojo duomenis
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchBookings = async () => {
+      if (!user?.email) {
+        setError("User email not available.");
+        return;
+      }
+
       setIsLoading(true);
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_BASE_URL}/bookings/user/test@example.com` // Pakeiskite vartotojo el. paštą
+          `${import.meta.env.VITE_APP_API_BASE_URL}/bookings/user/${user.email}`
         );
         setBookings(response.data);
       } catch (err) {
@@ -36,7 +43,7 @@ const MyBooking: React.FC<MyBookingProps> = ({ onClose }) => {
     };
 
     fetchBookings();
-  }, []);
+  }, [user?.email]); // Stebime email, jei keičiasi
 
   if (isLoading) {
     return <div>Loading bookings...</div>;

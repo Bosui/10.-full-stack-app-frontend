@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import styles from "./Dropdown.module.scss";
 
 interface DropdownProps {
@@ -8,7 +7,6 @@ interface DropdownProps {
 }
 
 const Dropdown: React.FC<DropdownProps> = ({ items, onClose }) => {
-  const navigate = useNavigate(); // Naudojame navigaciją
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

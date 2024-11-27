@@ -1,24 +1,22 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import { UserContext } from "../../context/UserContext"; // Importuojame UserContext
 import styles from "./BookingModal.module.scss";
 
 interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
   businessId: string;
-  userEmail: string;
-  userName: string;
 }
 
 const BookingModal: React.FC<BookingModalProps> = ({
   isOpen,
   onClose,
   businessId,
-  userEmail,
-  userName,
 }) => {
+  const { user } = useContext(UserContext); // Naudojame vartotojo duomenis iš konteksto
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,34 +40,44 @@ const BookingModal: React.FC<BookingModalProps> = ({
       return;
     }
 
+    if (!user?.email || !user?.name) {
+      alert("User information is missing. Please log in.");
+      return;
+    }
+
     const bookingData = {
-      businessId, // Iš props
-      date: selectedDate.toISOString(), // ISO formato data
-      time: selectedTime, // Pasirinktas laikas
-      userEmail, // Iš props
-      userName, // Iš props
-      status: "pending", // Numatytoji status reikšmė
+      businessId,
+      date: selectedDate.toISOString(),
+      time: selectedTime,
+      userEmail: user.email,
+      userName: user.name,
+      status: "pending",
     };
 
     try {
-      setIsSubmitting(true);
-      console.log("Sending booking data:", bookingData); // Debug logas
+    setIsSubmitting(true);
+    const response = await axios.post(
+      `${import.meta.env.VITE_APP_API_BASE_URL}/bookings`,
+      bookingData
+    );
 
-      const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_BASE_URL}/bookings`, // URL iš .env
-        bookingData
+    alert("Booking successfully created!");
+    console.log("Booking created successfully:", response.data);
+    onClose(); // Uždaro modalą
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error("Error creating booking:", error.response || error.message);
+      alert(
+        error.response?.data?.message || "Failed to create booking. Please try again."
       );
-
-      console.log("Booking created successfully:", response.data);
-      alert("Booking successfully created!");
-      onClose(); // Uždaro modalą
-    } catch (error) {
-      console.error("Error creating booking:", error);
-      alert("Failed to create booking. Please try again.");
-    } finally {
-      setIsSubmitting(false); // Atstatome submit būseną
+    } else {
+      console.error("Unexpected error:", error);
+      alert("An unexpected error occurred. Please try again.");
     }
-  };
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   if (!isOpen) return null;
 
@@ -94,10 +102,10 @@ const BookingModal: React.FC<BookingModalProps> = ({
           <div className={styles.field}>
             <label>Select Time Slot</label>
             <div className={styles.timeSlots}>
-              {timeSlots.map((time, index) => (
+              {timeSlots.map((time) => (
                 <button
                   type="button"
-                  key={index}
+                  key={time}
                   className={`${styles.timeSlot} ${
                     selectedTime === time ? styles.selected : ""
                   }`}

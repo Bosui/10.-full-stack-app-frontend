@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import styles from "./SearchCategory.module.scss";
 
 const SearchCategory = () => {
-  const { category } = useParams();
+  const { category } = useParams<{ category: string }>(); // Aiškiai nurodomas tipas
 
   return (
     <div className={styles.container}>

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// src/components/Sidebar.tsx
 import BookingModal from "./common/BookingModal";
 import styles from "./Sidebar.module.scss";
 
@@ -10,11 +11,9 @@ interface SidebarProps {
     contactPerson: string;
     email: string;
   };
-  userEmail: string;
-  userName: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ business, userEmail, userName }) => {
+const Sidebar: React.FC<SidebarProps> = ({ business }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleModal = () => {
@@ -36,8 +35,6 @@ const Sidebar: React.FC<SidebarProps> = ({ business, userEmail, userName }) => {
         isOpen={isModalOpen}
         onClose={toggleModal}
         businessId={business._id}
-        userEmail={userEmail}
-        userName={userName}
       />
     </div>
   );
